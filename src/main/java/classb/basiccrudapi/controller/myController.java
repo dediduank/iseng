@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @CrossOrigin
-@ResponseBody
 @RequestMapping("/barang")
 
 public class myController {
@@ -41,10 +41,21 @@ public class myController {
         try {
             return ctrl.findBarangEntities(); // return data if data is available
         } catch (Exception e) {
-            return List.of(); // check data is empty or no
+            return List.of(); // data is not available
         }
 
     }
+    
+     @PostMapping()
+    public String postBarang(@RequestBody Barang barang) //get data barang from
+    {
+       try{
+           ctrl.create(barang);
+           return "Data Saved";
+       }catch(Exception e){return "Failed to save data";}
+        
+    }
+
 
     @GetMapping("/{id}")
     public List<Barang> viewDatabyId(@PathVariable("id") int id) {
@@ -57,7 +68,8 @@ public class myController {
             return List.of(); // data is empty
         }
     }
-
+    
+   
     @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE) // convert string to JSON
     public String editData(@PathVariable("id") int id, @RequestBody Barang data) {
         String rslt = "Data has been updated";
@@ -74,11 +86,11 @@ public class myController {
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE) // convert string to json
     public String delete(@PathVariable("id") int id) {
-        String rslt = "Data Berhasil Di Hapus";
+        String rslt = "Data has been deleted";
         try {
             ctrl.destroy(id); // delete data
         } catch (Exception e) {
-            rslt = "Data Tidak Berhasil di hapus";
+            rslt = "Delete Failed";
         }
 
         return rslt;
