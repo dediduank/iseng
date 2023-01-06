@@ -52,7 +52,7 @@
         let dataText = { id: editID, namabarang: name, jumlahbarang: jumlah };
         let dataJson = JSON.stringify(dataText);
         $.ajax({
-          url: "http://localhost:8080/data",
+          url: url,
           method: "PUT",
           data: dataJson,
           contentType: "application/json",
