@@ -10,11 +10,13 @@ import java.util.List;
 import model.entity.Barang;
 import model.jpacontroller.BarangJpaController;
 import org.springframework.http.HttpEntity;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -23,21 +25,25 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @CrossOrigin
+@RequestMapping("/data")
 public class tryController {
 
     Barang mydata = new Barang();
     BarangJpaController ctrl = new BarangJpaController();
 
-    @RequestMapping(value = "/GET/{id}", method = RequestMethod.GET)
-    public String getNameById(@PathVariable("id") int id) {
-        try {
-            mydata = ctrl.findBarang(id);
-        } catch (Exception e) {
-        }
-        return mydata.getNamabarang();
+    @GetMapping("/{id}")
+    public List<Barang> getNameById(@PathVariable("id") int id) {
+       List<Barang> dummy = new ArrayList<>(); //Declare new LIST
+        try {             
+            mydata = ctrl.findBarang(id);  //get data from db        
+            dummy.add(mydata); //fill data from db to list
+            } catch (Exception e) {
+                dummy = List.of(); //data not found
+            }
+        return dummy; 
     }
 
-    @RequestMapping(value = "/GET")
+    @GetMapping
     public List<Barang> getAll() {
         List<Barang> dummy = new ArrayList<>();
         try {
@@ -48,7 +54,7 @@ public class tryController {
         return dummy;
     }
 
-    @RequestMapping(value = "/POST", method = RequestMethod.POST, consumes = APPLICATION_JSON_VALUE)
+    @PostMapping()
     public String createData(HttpEntity<String> paket) {
         String message = "";
 
@@ -71,7 +77,7 @@ public class tryController {
         return message;
     }
 
-    @RequestMapping(value = "/PUT", method = RequestMethod.PUT, consumes = APPLICATION_JSON_VALUE)
+    @PutMapping()
     public String editData(HttpEntity<String> kiriman) {
         String message = "no action";
         try {
@@ -88,7 +94,7 @@ public class tryController {
         return message;
     }
 
-    @RequestMapping(value = "/DELETE", method = RequestMethod.DELETE, consumes = APPLICATION_JSON_VALUE)
+    @DeleteMapping()
     public String deleteData(HttpEntity<String> kiriman) {
         String message = "no action";
         try {
@@ -96,12 +102,11 @@ public class tryController {
             ObjectMapper mapper = new ObjectMapper();
 
             Barang newdatas = new Barang();
-            String id = newdatas.getId().toString();
 
             newdatas = mapper.readValue(json_receive, Barang.class);
             ctrl.destroy(newdatas.getId());
 
-            message = id + " has been Updated";
+            message = "Data has been Deleted";
         } catch (Exception e) {
         }
         return message;

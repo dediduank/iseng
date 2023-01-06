@@ -45,17 +45,18 @@ public class myController {
         }
 
     }
-    
-     @PostMapping()
-    public String postBarang(@RequestBody Barang barang) //get data barang from
-    {
-       try{
-           ctrl.create(barang);
-           return "Data Saved";
-       }catch(Exception e){return "Failed to save data";}
-        
-    }
 
+    @PostMapping()
+    public String postBarang(@RequestBody Barang barang) // get data barang from
+    {
+        try {
+            ctrl.create(barang);
+            return "Data Saved";
+        } catch (Exception e) {
+            return "Failed to save data";
+        }
+
+    }
 
     @GetMapping("/{id}")
     public List<Barang> viewDatabyId(@PathVariable("id") int id) {
@@ -68,8 +69,7 @@ public class myController {
             return List.of(); // data is empty
         }
     }
-    
-   
+
     @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE) // convert string to JSON
     public String editData(@PathVariable("id") int id, @RequestBody Barang data) {
         String rslt = "Data has been updated";
