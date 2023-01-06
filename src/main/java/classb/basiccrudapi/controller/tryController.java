@@ -33,14 +33,14 @@ public class tryController {
 
     @GetMapping("/{id}")
     public List<Barang> getNameById(@PathVariable("id") int id) {
-       List<Barang> dummy = new ArrayList<>(); //Declare new LIST
-        try {             
-            mydata = ctrl.findBarang(id);  //get data from db        
-            dummy.add(mydata); //fill data from db to list
-            } catch (Exception e) {
-                dummy = List.of(); //data not found
-            }
-        return dummy; 
+        List<Barang> dummy = new ArrayList<>(); // Declare new LIST
+        try {
+            mydata = ctrl.findBarang(id); // get data from db
+            dummy.add(mydata); // fill data from db to list
+        } catch (Exception e) {
+            dummy = List.of(); // data not found
+        }
+        return dummy;
     }
 
     @GetMapping
