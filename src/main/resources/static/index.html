@@ -18,10 +18,24 @@
         $.ajax({
           url: url,
           method: "GET",
-          dataType: "text",
-          success: function (result) {
-            document.getElementById("viewer").innerHTML = result;
-          },
+          dataType: "json",
+          success: function (data) {
+            //start function
+            $("#mytable").find("tbody").empty(); //for empty table if data exists
+            $.each(data, function (key, value) {
+              //fill data to table
+              //  console.log(value.id);
+              var td =
+                "<tr><td>" +
+                value.id +
+                "</td> <td>" +
+                value.namabarang +
+                "</td> <td>" +
+                value.jumlahbarang +
+                "</td></tr>";
+              $("#mytable").find("tbody").append(td);
+            });
+          }, //end function
         });
       }
 
@@ -39,8 +53,7 @@
           contentType: "application/json",
           dataType: "text",
           success: function (result) {
-            console.log(dataText);
-            console.log(result);
+            get();
           },
         });
       }
@@ -52,13 +65,13 @@
         let dataText = { id: editID, namabarang: name, jumlahbarang: jumlah };
         let dataJson = JSON.stringify(dataText);
         $.ajax({
-          url: url,
+          url: "http://localhost:8080/data",
           method: "PUT",
           data: dataJson,
           contentType: "application/json",
           dataType: "text",
           success: function (result) {
-            console.log(result);
+            get();
           },
         });
       }
@@ -74,23 +87,50 @@
           contentType: "application/json",
           dataType: "text",
           success: function (result) {
-            console.log(result);
+            get();
           },
         });
       }
     </script>
-
-    ID : <input type="text" id="myid" name="myid" /><br />
-    Name : <input type="text" id="name" name="name" /><br />
-    Jumlah Barang :<input type="text" id="jumlahbarang" name="jumlahbarang" />
+    <table>
+      <tr>
+        <td>ID</td>
+        <td>:</td>
+        <td><input type="text" id="myid" name="myid" /></td>
+        <td><button onclick="get()">GET</button></td>
+      </tr>
+      <tr>
+        <td>Name</td>
+        <td>:</td>
+        <td><input type="text" id="name" name="name" /></td>
+        <td><button onclick="post()">INSERT</button></td>
+      </tr>
+      <tr>
+        <td>Jumlah Barang</td>
+        <td>:</td>
+        <td><input type="text" id="jumlahbarang" name="jumlahbarang" /></td>
+        <td><button onclick="put()">UPDATE</button></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td><button onclick="delID()">DELETE</button></td>
+      </tr>
+    </table>
 
     <hr />
+    <br />
 
-    <button onclick="get()">Get Data from Web Service</button> <br />
-    <button onclick="post()">Send Data to Web Service</button> <br />
-    <button onclick="put()">Edit Data of Web Service</button> <br />
-    <button onclick="delID()">Delete Data of Web Service</button> <br />
-    <hr />
-    <div id="viewer"></div>
+    <table id="mytable" border="1">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nama Barang</th>
+          <th>Jumlah Barang</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
   </body>
 </html>
